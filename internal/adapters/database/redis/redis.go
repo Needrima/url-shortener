@@ -11,7 +11,8 @@ type RedisInfra struct{
 	client *redis.Client
 }
 
-func NewInfra(client *redis.Client) *RedisInfra {
+func NewInfra() *RedisInfra {
+	client := ConnectToRedis()
 	return &RedisInfra{
 		client: client,
 	}

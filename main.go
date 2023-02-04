@@ -9,8 +9,7 @@ import (
 func main() {
 	fmt.Println("hello world")
 
-	redisClient := redisDB.ConnectToRedis()
-	dbInfra := redisDB.NewInfra(redisClient)
+	dbInfra := redisDB.NewInfra()
 	router := routes.SetupRouter(dbInfra)
 	router.Run(":8080")
 }
