@@ -1,6 +1,6 @@
 package ports
 
 type RedisRepository interface {
-	Set()
+	Set(data interface{}) (interface{}, error)
 	Get()
 }

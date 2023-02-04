@@ -1,6 +1,6 @@
 package ports
 
 type URLShortenerService interface {
-	Set()
+	Set(data interface{}) (interface{}, error)
 	Get()
 }

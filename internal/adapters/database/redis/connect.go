@@ -1,12 +1,21 @@
 package database
 
-import "github.com/go-redis/redis/v8"
+import (
+	"url-shortener/internal/core/helpers"
+
+	"github.com/go-redis/redis/v8"
+)
 
 func ConnectToRedis(dbNo int) *redis.Client {
+	config, err := helpers.LoadEnv(".")
+	if err != nil {
+		panic(err)
+	}
+
 	client := redis.NewClient(&redis.Options{
-		Addr: "db:6379",
-		Password: "",
-		DB: dbNo,
+		Addr:     config.RedisAddr,
+		Password: config.RedisPass,
+		DB:       dbNo,
 	})
 
 	return client

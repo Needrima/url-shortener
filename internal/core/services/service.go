@@ -12,10 +12,10 @@ func NewService(dbPort ports.RedisRepository) *URLService {
 	}
 }
 
-func (s *URLService)Get() {
+func (s *URLService) Get() {
 	s.dbPort.Get()
 }
 
-func (s *URLService)Set() {
-	s.dbPort.Set()
+func (s *URLService) Set(data interface{}) (interface{}, error) {
+	return s.dbPort.Set(data)
 }

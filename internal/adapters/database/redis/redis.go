@@ -2,12 +2,14 @@ package database
 
 import (
 	"context"
-	"time"
+	"errors"
+	"log"
+	"url-shortener/internal/core/models"
 
 	redis "github.com/go-redis/redis/v8"
 )
 
-type RedisInfra struct{
+type RedisInfra struct {
 	client *redis.Client
 }
 
@@ -18,10 +20,15 @@ func NewInfra() *RedisInfra {
 	}
 }
 
-func (r *RedisInfra) Set() {
-	r.client.Set(context.TODO(), "key", map[string]interface{}{}, time.Minute)
+func (r *RedisInfra) Set(data interface{}) (interface{}, error) {
+	if err := r.client.Set(context.TODO(), "key", data, 0).Err(); err != nil {
+		log.Println("error storing URL in redis cache:", err.Error())
+		return nil, errors.New("something went wrong")
+	}
+
+	return models.Response{}, nil
 }
 
 func (r *RedisInfra) Get() {
-	r.client.Get(context.TODO(), "key")
+	r.client.Get(context.TODO(), "key").Result()
 }
