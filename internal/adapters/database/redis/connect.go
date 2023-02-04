@@ -7,10 +7,7 @@ import (
 )
 
 func ConnectToRedis(dbNo int) *redis.Client {
-	config, err := helpers.LoadEnv(".")
-	if err != nil {
-		panic(err)
-	}
+	config := helpers.LoadEnv(".")
 
 	client := redis.NewClient(&redis.Options{
 		Addr:     config.RedisAddr,

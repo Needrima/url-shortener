@@ -8,7 +8,7 @@ import (
 )
 
 func InitializeLogger() {
-	config, _ := LoadEnv(".")
+	config := LoadEnv(".")
 	logDir := config.LogDir
 	_ = os.Mkdir(logDir, os.ModePerm)
 

@@ -12,5 +12,6 @@ func main() {
 
 	dbInfra := redisDB.NewInfra()
 	router := routes.SetupRouter(dbInfra)
-	router.Run(":8080")
+	config := helpers.LoadEnv(".")
+	router.Run(":" + config.Port)
 }

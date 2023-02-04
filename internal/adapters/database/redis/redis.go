@@ -20,7 +20,7 @@ func NewInfra() *RedisInfra {
 	}
 }
 
-func (r *RedisInfra) Set(data interface{}) (interface{}, error) {
+func (r *RedisInfra) ShortenURL(data models.Request) (interface{}, error) {
 	if err := r.client.Set(context.TODO(), "key", data, 0).Err(); err != nil {
 		log.Println("error storing URL in redis cache:", err.Error())
 		return nil, errors.New("something went wrong")
@@ -29,6 +29,6 @@ func (r *RedisInfra) Set(data interface{}) (interface{}, error) {
 	return models.Response{}, nil
 }
 
-func (r *RedisInfra) Get() {
+func (r *RedisInfra) ResolveURL() {
 	r.client.Get(context.TODO(), "key").Result()
 }

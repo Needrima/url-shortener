@@ -7,9 +7,11 @@ type Config struct {
 	RedisPass string `mapstructure:"REDIS_PASSWORD"`
 	LogDir    string `mapstructure:"LOG_DIR"`
 	LogFile   string `mapstructure:"LOG_FILE"`
+	Host      string `mapstructure:"HOST"`
+	Port      string `mapstructure:"PORT"`
 }
 
-func LoadEnv(path string) (Config, error) {
+func LoadEnv(path string) Config {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
@@ -17,12 +19,12 @@ func LoadEnv(path string) (Config, error) {
 	viper.AutomaticEnv()
 	err := viper.ReadInConfig()
 	if err != nil {
-		return Config{}, err
+		panic(err)
 	}
 	var config Config
 	if err = viper.Unmarshal(&config); err != nil {
-		return Config{}, err
+		panic(err)
 	}
 
-	return config, nil
+	return config
 }

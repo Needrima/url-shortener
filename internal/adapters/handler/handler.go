@@ -23,13 +23,13 @@ func (hdl *HTTPHandler) ShortenURL(c *gin.Context) {
 
 	if err := c.BindJSON(&body); err != nil {
 		log.Println("error reading request body:", err.Error())
-		c.JSON(500, gin.H{
-			"error": "something went wrong",
+		c.JSON(400, gin.H{
+			"error": "bad request",
 		})
 		return
 	}
 
-	res, err := hdl.servicePort.Set(body)
+	res, err := hdl.servicePort.ShortenURL(body)
 	if err != nil {
 		log.Println("error shortening URL:", err.Error())
 		c.JSON(500, gin.H{
@@ -41,5 +41,5 @@ func (hdl *HTTPHandler) ShortenURL(c *gin.Context) {
 	c.JSON(200, res)
 }
 func (hdl *HTTPHandler) ResolveURL(c *gin.Context) {
-	hdl.servicePort.Get()
+	hdl.servicePort.ResolveURL()
 }
