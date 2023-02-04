@@ -13,10 +13,10 @@ func SetupRouter(dbRepository ports.RedisRepository) *gin.Engine {
 	service := services.NewService(dbRepository)
 	handler := handler.NewHandler(service)
 
-	routerGroup := router.Group("/set")
+	routerGroup := router.Group("/api")
 	{
-		routerGroup.POST("/:id", handler.Set)
-		routerGroup.GET("/:id", handler.Get)
+		routerGroup.POST("/set", handler.Set)
+		routerGroup.GET("/get/:key", handler.Get)
 	}
 
 	return router

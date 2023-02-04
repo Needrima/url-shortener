@@ -12,7 +12,7 @@ type RedisInfra struct{
 }
 
 func NewInfra() *RedisInfra {
-	client := ConnectToRedis()
+	client := ConnectToRedis(0)
 	return &RedisInfra{
 		client: client,
 	}
