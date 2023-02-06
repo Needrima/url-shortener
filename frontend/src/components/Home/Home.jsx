@@ -17,10 +17,11 @@ const Home = () => {
 
   const handleClick =  async () => {
     try {
-      const res = await axios.post("http://localhost:8080/api/shorten_url", state);
-      onStateChange(res.data);
+      const {data} = await axios.post("http://localhost:8080/api/shorten_url", state);
+      onStateChange(data);
     }catch(error) {
       console.log(error)
+      alert(error.response.data.error)
     }
   }
 

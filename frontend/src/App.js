@@ -15,8 +15,6 @@ function App() {
   })
 
   const onStateChange = (data) => {
-    console.log(data)
-    console.log(data["shortened_url"])
     setState(state => ({
       ...state,
       shortened_url: data.shortened_url,
