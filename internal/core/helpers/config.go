@@ -3,12 +3,13 @@ package helpers
 import "github.com/spf13/viper"
 
 type Config struct {
-	RedisAddr string `mapstructure:"REDIS_ADDR"`
-	RedisPass string `mapstructure:"REDIS_PASSWORD"`
-	LogDir    string `mapstructure:"LOG_DIR"`
-	LogFile   string `mapstructure:"LOG_FILE"`
-	Host      string `mapstructure:"HOST"`
-	Port      string `mapstructure:"PORT"`
+	RedisAddr   string `mapstructure:"REDIS_ADDR"`
+	RedisPass   string `mapstructure:"REDIS_PASSWORD"`
+	LogDir      string `mapstructure:"LOG_DIR"`
+	LogFile     string `mapstructure:"LOG_FILE"`
+	Host        string `mapstructure:"HOST"`
+	Port        string `mapstructure:"PORT"`
+	UsageTrials string `mapstructure:"USAGE_TRAILS"`
 }
 
 func LoadEnv(path string) Config {

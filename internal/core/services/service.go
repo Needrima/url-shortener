@@ -16,15 +16,20 @@ func NewService(dbPort ports.RedisRepository) *URLService {
 	}
 }
 
-func (s *URLService) ResolveURL() {
-	s.dbPort.ResolveURL()
+func (s *URLService) ResolveURL(url, ip string) map[string]interface{} {
+	return s.dbPort.ResolveURL(url, ip)
 }
 
-func (s *URLService) ShortenURL(data models.Request) (interface{}, error) {
-	if err := helpers.ValidateURL(data.URL); err != nil {
-		return nil, err
+func (s *URLService) ShortenURL(body models.Request, ip string) map[string]interface{} {
+	// url validation
+	if err := helpers.ValidateURL(body.URL); err != nil {
+		return map[string]interface{}{
+			"data":  "invlalid url",
+			"error": "",
+			"code":  400,
+		}
 	}
-	data.URL = helpers.EnforceHTTP(data.URL)
+	body.URL = helpers.EnforceHTTP(body.URL)
 
-	return s.dbPort.ShortenURL(data)
+	return s.dbPort.ShortenURL(body, ip)
 }

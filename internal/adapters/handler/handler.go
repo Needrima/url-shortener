@@ -28,18 +28,15 @@ func (hdl *HTTPHandler) ShortenURL(c *gin.Context) {
 		})
 		return
 	}
+	ip := c.RemoteIP()
 
-	res, err := hdl.servicePort.ShortenURL(body)
-	if err != nil {
-		log.Println("error shortening URL:", err.Error())
-		c.JSON(500, gin.H{
-			"error": "something went wrong",
-		})
-		return
-	}
+	res := hdl.servicePort.ShortenURL(body, ip)
 
-	c.JSON(200, res)
+	c.JSON(res["code"].(int), res)
 }
 func (hdl *HTTPHandler) ResolveURL(c *gin.Context) {
-	hdl.servicePort.ResolveURL()
+	url, ip := c.Param("url"), c.RemoteIP()
+	res := hdl.servicePort.ResolveURL(url, ip)
+
+	c.JSON(res["code"].(int), res)
 }

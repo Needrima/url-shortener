@@ -3,6 +3,6 @@ package ports
 import "url-shortener/internal/core/models"
 
 type URLShortenerService interface {
-	ShortenURL(data models.Request) (interface{}, error)
-	ResolveURL()
+	ShortenURL(body models.Request, ip string) map[string]interface{}
+	ResolveURL(url, ip string) map[string]interface{}
 }
