@@ -24,7 +24,11 @@ func (hdl *HTTPHandler) ShortenURL(c *gin.Context) {
 	if err := c.BindJSON(&body); err != nil {
 		log.Println("error reading request body:", err.Error())
 		c.JSON(400, gin.H{
-			"error": "bad request",
+			"error": "bad request, check that field are correct",
+			"reasons": []string{
+				"user specified a custom id with non alphanumeric characters",
+				"user specified id not up to six characters",
+			},
 		})
 		return
 	}
@@ -35,8 +39,8 @@ func (hdl *HTTPHandler) ShortenURL(c *gin.Context) {
 	c.JSON(res["code"].(int), res)
 }
 func (hdl *HTTPHandler) ResolveURL(c *gin.Context) {
-	url, ip := c.Param("url"), c.RemoteIP()
-	res := hdl.servicePort.ResolveURL(url, ip)
+	id, ip := c.Param("id"), c.RemoteIP()
+	res := hdl.servicePort.ResolveURL(id, ip)
 
 	c.JSON(res["code"].(int), res)
 }

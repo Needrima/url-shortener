@@ -15,7 +15,7 @@ func ValidateURL(url string) error {
 
 	// remove domain error for localhost:8080
 	config := LoadEnv(".")
-	domain := config.Host + ":" + config.Port
+	domain := config.Domain
 	if url == domain {
 		return errors.New("url is domain; url can not be domain")
 	}

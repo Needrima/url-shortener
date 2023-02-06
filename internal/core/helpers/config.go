@@ -10,6 +10,7 @@ type Config struct {
 	Host        string `mapstructure:"HOST"`
 	Port        string `mapstructure:"PORT"`
 	UsageTrials string `mapstructure:"USAGE_TRAILS"`
+	Domain      string `mapstructure:"DOMAIN"`
 }
 
 func LoadEnv(path string) Config {

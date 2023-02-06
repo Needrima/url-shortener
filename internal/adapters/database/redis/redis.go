@@ -12,29 +12,30 @@ import (
 )
 
 type RedisInfra struct {
-	URLclient    *redis.Client // to store shortened URLs
-	IPAddrClient *redis.Client // stores user IP address to check for users usage quota
+	URLDB    *redis.Client // to store shortened urls based on the id of their short
+	IPAddrDB *redis.Client // stores user IP address to check for users usage quota
 }
 
 func NewInfra() *RedisInfra {
-	URLclient := ConnectToRedis(0)
-	IPAddrClient := ConnectToRedis(1)
+	URLDB := ConnectToRedis(0)
+	IPAddrDB := ConnectToRedis(1)
 	return &RedisInfra{
-		URLclient:    URLclient,
-		IPAddrClient: IPAddrClient,
+		URLDB:    URLDB,
+		IPAddrDB: IPAddrDB,
 	}
 }
 
 func (r *RedisInfra) ShortenURL(body models.Request, ip string) map[string]interface{} {
-	usageTrials, err := r.IPAddrClient.Get(context.TODO(), ip).Result()
+	// handle rate limit
+	usageTrials, err := r.IPAddrDB.Get(context.TODO(), ip).Result()
 
 	if err != nil {
 		switch err {
-		case redis.Nil: // no records found for user IP
+		case redis.Nil: // user is using the service for the first time or user rate limit has been refreshed
 			helpers.LogEvent("INFO", fmt.Sprintf("new user, adding IP address {%v} to database for", ip))
 
 			config := helpers.LoadEnv(".")
-			if err := r.IPAddrClient.Set(context.TODO(), ip, config.UsageTrials, time.Minute*30).Err(); err != nil {
+			if err := r.IPAddrDB.Set(context.TODO(), ip, config.UsageTrials, time.Minute*30).Err(); err != nil {
 				helpers.LogEvent("ERROR", "could not add user's IP address to database:"+err.Error())
 				data := map[string]interface{}{
 					"data":  "",
@@ -57,25 +58,59 @@ func (r *RedisInfra) ShortenURL(body models.Request, ip string) map[string]inter
 		usageTrialsInt, _ := strconv.Atoi(usageTrials)
 		if usageTrialsInt <= 0 { // user exceeded the limit for usage
 			helpers.LogEvent("INFO", "user exceede rate limit for")
-			limit, _ := r.IPAddrClient.TTL(context.TODO(), ip).Result()
+			limit, _ := r.IPAddrDB.TTL(context.TODO(), ip).Result()
 			data := map[string]interface{}{
-				"data":             "",
-				"error":            "rate limit exceeded",
-				"code":             503,
-				"rate_limit_reset": limit / time.Nanosecond / time.Minute, // time to usage limit reset
+				"data":              "",
+				"error":             "rate limit exceeded",
+				"code":              503,
+				"usage_limit_reset": limit / time.Nanosecond / time.Minute, // time to usage limit reset
 			}
 
 			return data
 		}
 	}
 
-	r.IPAddrClient.Decr(context.TODO(), ip) // decrement usage count to track rate limit
-	
-	return map[string]interface{}{}
+	// check if id is already taken
+	u, _ := r.URLDB.Get(context.TODO(), body.CustomID).Result()
+	if u != "" { // url id is already taken
+		helpers.LogEvent("INFO", "url wanted by user is already taken:"+err.Error())
+		data := map[string]interface{}{
+			"data":  "",
+			"error": "custom shortened url specified is already taken",
+			"code":  403,
+		}
+		return data
+	}
+
+	// decrement usage count to track rate limit
+	remaining, _ := r.IPAddrDB.Decr(context.TODO(), ip).Result()
+
+	// store url in database
+	if err := r.URLDB.Set(context.TODO(), body.CustomID, body.URL, body.ExpiriesAt).Err(); err != nil {
+		helpers.LogEvent("ERROR", "storing new url in database:"+err.Error())
+		data := map[string]interface{}{
+			"data":  "",
+			"error": "something went wrong",
+			"code":  500,
+		}
+		return data
+	}
+
+	// create response
+	config := helpers.LoadEnv(".")
+	limit, _ := r.IPAddrDB.TTL(context.TODO(), ip).Result()
+	data := map[string]interface{}{
+		"shortened_url":     fmt.Sprintf("%v/%v", config.Domain, body.CustomID),
+		"totalUsageAllowed": 10, // allowed usage per 30 minutes
+		"usageRemaining":    remaining,
+		"usage_limit_reset": limit / time.Nanosecond / time.Minute, // time to usage limit reset
+	}
+
+	return data
 }
 
-func (r *RedisInfra) ResolveURL(url, ip string) map[string]interface{} {
-	short, err := r.URLclient.Get(context.TODO(), url).Result()
+func (r *RedisInfra) ResolveURL(id, ip string) map[string]interface{} {
+	url, err := r.URLDB.Get(context.TODO(), id).Result()
 	if err != nil {
 		if err == redis.Nil {
 			helpers.LogEvent("ERROR", "redis key not found:"+err.Error())
@@ -96,10 +131,10 @@ func (r *RedisInfra) ResolveURL(url, ip string) map[string]interface{} {
 		return data
 	}
 
-	r.IPAddrClient.Decr(context.TODO(), ip)
+	r.IPAddrDB.Decr(context.TODO(), ip)
 
 	data := map[string]interface{}{
-		"data":  short,
+		"data":  url,
 		"error": "",
 		"code":  200,
 	}

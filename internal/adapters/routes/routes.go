@@ -20,7 +20,7 @@ func SetupRouter(dbRepository ports.RedisRepository) *gin.Engine {
 	routerGroup := router.Group("/api")
 	{
 		routerGroup.POST("/shorten_url", handler.ShortenURL)
-		routerGroup.GET("/:url", handler.ResolveURL)
+		routerGroup.GET("/:id", handler.ResolveURL)
 	}
 
 	return router
