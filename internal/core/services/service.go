@@ -26,9 +26,8 @@ func (s *URLService) ShortenURL(body models.Request, ip string) map[string]inter
 	// url validation
 	if err := helpers.ValidateURL(body.URL); err != nil {
 		return map[string]interface{}{
-			"data":  "invlalid url",
-			"error": "",
-			"code":  400,
+			"data": "invlalid url",
+			"code": 400,
 		}
 	}
 	body.URL = helpers.EnforceHTTP(body.URL)
