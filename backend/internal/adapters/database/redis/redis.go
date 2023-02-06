@@ -55,7 +55,7 @@ func (r *RedisInfra) ShortenURL(body models.Request, ip string) map[string]inter
 	} else {
 		usageTrialsInt, _ := strconv.Atoi(usageTrials)
 		if usageTrialsInt <= 0 { // user exceeded the limit for usage
-			helpers.LogEvent("INFO", "user exceede rate limit for")
+			helpers.LogEvent("INFO", "user exceeded usage limit")
 			limit, _ := r.IPAddrDB.TTL(context.TODO(), ip).Result()
 			data := map[string]interface{}{
 				"error":             "rate limit exceeded",
@@ -126,8 +126,6 @@ func (r *RedisInfra) ResolveURL(id, ip string) map[string]interface{} {
 		}
 		return data
 	}
-
-	r.IPAddrDB.Decr(context.TODO(), ip)
 
 	data := map[string]interface{}{
 		"data": url,

@@ -32,7 +32,12 @@ func (s *URLService) ShortenURL(body models.Request, ip string) map[string]inter
 	}
 	body.URL = helpers.EnforceHTTP(body.URL)
 	body.ExpiriesAt = time.Hour * 24
-	if body.CustomID == "" { // if user does not specify a custom url id
+	if body.CustomID != "" && len(body.CustomID) != 6 { // if user does not specify a custom url id
+		return map[string]interface{}{
+			"error": "invalid custom id, id must be alphanumeric and six characters long",
+			"code": 403,
+		}
+	}else {
 		body.CustomID = uuid.NewV4().String()[:6]
 	}
 

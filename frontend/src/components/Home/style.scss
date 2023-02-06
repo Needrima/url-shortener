@@ -1,0 +1,62 @@
+.home {
+    position: relative;
+    .form {
+        width: 1200px;
+        margin: 0 auto;
+        margin-top: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .inputs {
+            width: 100%;
+            input {
+                padding: 20px;
+                font-size: 24px;
+                margin-bottom: 10px;
+                outline: none;
+            }
+    
+            #url {
+                width: 50%;
+            }
+
+            #custom_id {
+                width: 30%;
+            }
+        }
+
+        button {
+            padding: 20px;
+            background-color: green;
+            color: white;
+            border: 0;
+            border-radius: 4px;
+            font-size: 24px;
+        }
+    }
+
+    .display_shortened_url {
+        width: 500px;
+        margin: 0 auto;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border: 1px solid black;
+        padding: 20px 0;
+        border: 10px;
+        box-shadow: 0px 12px 12px rgba(50, 50, 71, 0.08), 0px 16px 24px rgba(50, 50, 71, 0.08);
+
+        span {
+            font-size: 24px;
+            font-size: 600;
+        }
+
+        i {
+            font-size: 24px;
+            color: green;
+        }
+    }
+}
