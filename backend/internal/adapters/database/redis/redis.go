@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-	"url-shortener/internal/core/helpers"
-	"url-shortener/internal/core/models"
+	"url-shortener-backend/internal/core/helpers"
+	"url-shortener-backend/internal/core/models"
 
 	redis "github.com/go-redis/redis/v8"
 )
@@ -78,9 +78,6 @@ func (r *RedisInfra) ShortenURL(body models.Request, ip string) map[string]inter
 		return data
 	}
 
-	// decrement usage count to track rate limit
-	remaining, _ := r.IPAddrDB.Decr(context.TODO(), ip).Result()
-
 	// store url in database
 	if err := r.URLDB.Set(context.TODO(), body.CustomID, body.URL, body.ExpiriesAt).Err(); err != nil {
 		helpers.LogEvent("ERROR", "storing new url in database:"+err.Error())
@@ -91,10 +88,14 @@ func (r *RedisInfra) ShortenURL(body models.Request, ip string) map[string]inter
 		return data
 	}
 
+	// decrement usage count to track rate limit
+	remaining, _ := r.IPAddrDB.Decr(context.TODO(), ip).Result()
+
 	// create response
 	config := helpers.LoadEnv(".")
 	limit, _ := r.IPAddrDB.TTL(context.TODO(), ip).Result()
 	data := map[string]interface{}{
+		"url_id": body.CustomID,
 		"shortened_url":     fmt.Sprintf("%v/%v", config.Domain, body.CustomID),
 		"totalUsageAllowed": 10, // allowed usage per 30 minutes
 		"usageRemaining":    remaining,

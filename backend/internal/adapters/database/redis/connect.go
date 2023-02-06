@@ -1,7 +1,7 @@
 package database
 
 import (
-	"url-shortener/internal/core/helpers"
+	"url-shortener-backend/internal/core/helpers"
 
 	"github.com/go-redis/redis/v8"
 )

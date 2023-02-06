@@ -1,2 +1,2 @@
 # url-shortener
-Url shortener with Go and Redis
+Url shortener with Go, React and Redis 

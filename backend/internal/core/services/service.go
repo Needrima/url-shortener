@@ -3,9 +3,9 @@ package services
 import (
 	uuid "github.com/satori/go.uuid"
 	"time"
-	"url-shortener/internal/core/helpers"
-	"url-shortener/internal/core/models"
-	"url-shortener/internal/ports"
+	"url-shortener-backend/internal/core/helpers"
+	"url-shortener-backend/internal/core/models"
+	"url-shortener-backend/internal/ports"
 )
 
 type URLService struct {

@@ -1,9 +1,9 @@
 package main
 
 import (
-	redisDB "url-shortener/internal/adapters/database/redis"
-	"url-shortener/internal/adapters/routes"
-	"url-shortener/internal/core/helpers"
+	redisDB "url-shortener-backend/internal/adapters/database/redis"
+	"url-shortener-backend/internal/adapters/routes"
+	"url-shortener-backend/internal/core/helpers"
 )
 
 func main() {

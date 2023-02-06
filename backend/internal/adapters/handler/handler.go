@@ -2,8 +2,8 @@ package handler
 
 import (
 	"log"
-	"url-shortener/internal/core/models"
-	"url-shortener/internal/ports"
+	"url-shortener-backend/internal/core/models"
+	"url-shortener-backend/internal/ports"
 
 	"github.com/gin-gonic/gin"
 )

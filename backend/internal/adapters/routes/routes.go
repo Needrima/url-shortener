@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"url-shortener/internal/adapters/handler"
-	"url-shortener/internal/core/middleware"
-	"url-shortener/internal/core/services"
-	"url-shortener/internal/ports"
+	"url-shortener-backend/internal/adapters/handler"
+	"url-shortener-backend/internal/core/middleware"
+	"url-shortener-backend/internal/core/services"
+	"url-shortener-backend/internal/ports"
 
 	"github.com/gin-gonic/gin"
 )

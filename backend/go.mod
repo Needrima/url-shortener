@@ -1,4 +1,4 @@
-module url-shortener
+module url-shortener-backend
 
 go 1.19
 
