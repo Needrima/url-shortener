@@ -14,6 +14,7 @@ const Home = () => {
   const {url, custom_id} = state;
 
   const {onStateChange, clearState, state:{shortened_url, url_id}} = useContext(AppContext);
+  console.log(shortened_url);
 
   const handleClick =  async () => {
     try {
@@ -48,7 +49,7 @@ const Home = () => {
               }))}/>
               <input 
                type="text" 
-               placeholder='Enter custom ID for URL(optional, must be six characters long)' 
+               placeholder='Enter custom ID(optional, 6 characters long)' 
                id='custom_id' 
                name='custom_id'
                value={custom_id}
@@ -63,7 +64,7 @@ const Home = () => {
         {shortened_url && <div className='display_shortened_url'>
           <span>{shortened_url}</span>
           <i className="fas fa-clipboard" onClick={copyToClipboard}></i>
-          <i className="fas fa-link" onClick={() => navigate(`/${url_id}`)}></i>
+          <i className="fas fa-link" onClick={() => navigate(`/${url_id}`, {replace: true})}></i>
           <i className="fa fa-times" aria-hidden="true" onClick={clearState}></i>
         </div>
         }

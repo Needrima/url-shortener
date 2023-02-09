@@ -16,3 +16,5 @@
 {"@timestamp":"2023-02-06T23:35:01+01:00","level":"INFO","message":"starting server on port 8080"}
 {"@timestamp":"2023-02-06T23:35:14+01:00","level":"INFO","message":"new user, adding IP address {::1} to database for"}
 {"@timestamp":"2023-02-06T23:37:58+01:00","level":"INFO","message":"starting server on port 8080"}
+{"@timestamp":"2023-02-08T11:52:46+01:00","level":"INFO","message":"starting server on port 8080"}
+{"@timestamp":"2023-02-08T11:54:30+01:00","level":"INFO","message":"new user, adding IP address {::1} to database for"}
